@@ -29,7 +29,8 @@ public class Notice {
   private Long id;
 
   @Column(nullable = false)
-  private Boolean isRead;
+  @Builder.Default
+  private Boolean isRead = false;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

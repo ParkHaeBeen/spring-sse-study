@@ -12,7 +12,7 @@ $(document).ready(function() {
       let message = event.data;
       alert(message);
     })
-    eventSource.addEventListener("comment", function(event) {
+    eventSource.addEventListener("connect", function(event) {
       let message = event.data;
       console.log(message);
     })

@@ -1,8 +1,11 @@
 package com.example.springssestudy.service;
 
+import com.example.springssestudy.domain.Comment;
 import com.example.springssestudy.domain.Memo;
+import com.example.springssestudy.domain.Notice;
 import com.example.springssestudy.repository.EmitterRepository;
 import com.example.springssestudy.repository.MemoRepository;
+import com.example.springssestudy.repository.NoticeRepository;
 import com.example.springssestudy.security.jwt.JwtUtils;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +16,24 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 public class NotificationService {
 
-  private final MemoRepository memoRepository;
+  private final NoticeRepository noticeRepository;
   private final EmitterRepository emitterRepository;
   private final JwtUtils jwtUtils;
 
-  public void notifyAddCommentEvent(Memo memo) {
-    Long userId = memo.getUser().getId();
+  public void notifyAddCommentEvent(Comment comment) {
+    Long userId = comment.getUser().getId();
+    noticeRepository.save(Notice.builder()
+                                .user(comment.getUser())
+                                .build());
     SseEmitter sseEmitter = emitterRepository.findByUserId(userId);
-    if(sseEmitter != null){
-      try {
-        sseEmitter.send(SseEmitter.event().name("addComment").data("댓글이 달렸습니다!!!!!"));
-      } catch (Exception e) {
-        emitterRepository.deleteByUserId(userId);
-      }
+    if(sseEmitter == null){
+      sseEmitter = save(userId);
+    }
+
+    try {
+      sseEmitter.send(SseEmitter.event().name("addComment").data(comment.getContent()));
+    } catch (Exception e) {
+      emitterRepository.deleteByUserId(userId);
     }
   }
 
@@ -33,7 +41,22 @@ public class NotificationService {
     Long userId = jwtUtils.getUserIdFromToken(token);
     SseEmitter emitter = emitterRepository.save(userId);
     try {
-      emitter.send(SseEmitter.event().name("connect"));
+      emitter.send(SseEmitter.event().name("connect").data("sse 연결됨"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    emitter.onCompletion(() -> emitterRepository.deleteByUserId(userId));
+    emitter.onTimeout(() -> emitterRepository.deleteByUserId(userId));
+    emitter.onError((e) -> emitterRepository.deleteByUserId(userId));
+
+    return emitter;
+  }
+
+  public SseEmitter save(Long userId){
+    SseEmitter emitter = emitterRepository.save(userId);
+    try {
+      emitter.send(SseEmitter.event().name("connect").data("sse 연결됨"));
     } catch (IOException e) {
       e.printStackTrace();
     }

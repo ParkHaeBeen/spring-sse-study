@@ -39,12 +39,12 @@ public class MemoService {
   }
 
   @Transactional
-  public Memo addComment(Long memoId, User user, CommentDto commentDto) {
+  public Comment addComment(Long memoId, User user, CommentDto commentDto) {
     Memo memo = memoRepository.findById(memoId).get();
 
     Comment comment = new Comment(commentDto.getContent(), user, memo);
     memo.addComment(comment);
 
-    return memo;
+    return comment;
   }
 }
