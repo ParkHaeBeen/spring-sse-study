@@ -42,4 +42,8 @@ public class Notice {
   private User user;
 
   private Long infoId;
+
+  public void changeIsRead(){
+    isRead = true;
+  }
 }

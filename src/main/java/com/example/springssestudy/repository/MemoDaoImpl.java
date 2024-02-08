@@ -17,7 +17,7 @@ public class MemoDaoImpl implements MemoDao{
   public Memo getMemoDetail(Long id) {
     Memo memo = em.createQuery(
             "select distinct m from Memo m " +
-                "left join fetch m.user u " +
+                "left join  m.user u " +
                 "left join fetch m.comments c " +
                 "where m.id = :id", Memo.class
         )

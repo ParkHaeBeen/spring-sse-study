@@ -26,6 +26,7 @@ public class NotificationService {
     Long userId = memo.getUser().getId();
     noticeRepository.save(Notice.builder()
                                 .user(memo.getUser())
+                                .infoId(memoId)
                                 .build());
     SseEmitter sseEmitter = emitterRepository.findByUserId(userId);
     if(sseEmitter == null){

@@ -2,12 +2,15 @@ package com.example.springssestudy.service;
 
 import com.example.springssestudy.domain.Comment;
 import com.example.springssestudy.domain.Memo;
+import com.example.springssestudy.domain.Notice;
 import com.example.springssestudy.domain.User;
 import com.example.springssestudy.dto.CommentDto;
 import com.example.springssestudy.dto.MemoDto;
 import com.example.springssestudy.repository.CommentRepository;
 import com.example.springssestudy.repository.MemoRepository;
+import com.example.springssestudy.repository.NoticeRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class MemoService {
 
   private final MemoRepository memoRepository;
   private final CommentRepository commentRepository;
+  private final NoticeRepository noticeRepository;
 
   @Transactional
   public void saveMemo(MemoDto memoDto, User user) {
@@ -31,11 +35,17 @@ public class MemoService {
         .map(m -> new MemoDto(m.getId(), m.getTitle(), m.getContent())).collect(Collectors.toList());
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public Memo findMemo(Long id) {
+    List <Notice> notices = noticeRepository.findByInfoId(id);
+    System.out.println("notices = " + notices.size());
+    if(!notices.isEmpty()){
+      for (Notice notice : notices) {
+        System.out.println(notice);
+        notice.changeIsRead();
+      }
+    }
     return memoRepository.getMemoDetail(id);
-
-
   }
 
   @Transactional

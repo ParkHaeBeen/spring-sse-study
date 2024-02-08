@@ -23,12 +23,12 @@ public class Comment {
 
   @JsonIgnore
   @JoinColumn(name = "user_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private User user;
 
   @JsonIgnore
   @JoinColumn(name = "memo_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private Memo memo;
 
   public void setMemo(Memo memo) {

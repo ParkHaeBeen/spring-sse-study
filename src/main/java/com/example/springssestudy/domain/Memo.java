@@ -30,10 +30,10 @@ public class Memo {
   private String content;
 
   @JoinColumn(name = "users_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private User user;
 
-  @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List <Comment> comments = new ArrayList <>();
 
   public Memo(String title, String content, User user) {
