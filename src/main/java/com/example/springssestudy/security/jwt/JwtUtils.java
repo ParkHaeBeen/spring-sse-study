@@ -17,7 +17,7 @@ public class JwtUtils {
   public String createToken(User user) {
 
     return Jwts.builder()
-        .claim("username", user.getUsername())
+        .claim("username", user.getUserName())
         .claim("userId", user.getId())
         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
         .signWith(SIGNATURE, SECRET)

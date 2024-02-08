@@ -1,6 +1,7 @@
 package com.example.springssestudy.controller;
 
 import com.example.springssestudy.security.jwt.JwtUtils;
+import com.example.springssestudy.service.NotificationService;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,29 +18,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 public class SseController {
 
-  public static Map <Long, SseEmitter> sseEmitters = new ConcurrentHashMap <>();
-  private final JwtUtils jwtUtils;
-
+  private final NotificationService notificationService;
 
   @CrossOrigin
   @GetMapping(value = "/sub", consumes = MediaType.ALL_VALUE)
   public SseEmitter subscribe(@RequestParam String token) {
-    Long userId = jwtUtils.getUserIdFromToken(token);
-
-
-    SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-    try {
-      sseEmitter.send(SseEmitter.event().name("connect"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    sseEmitters.put(userId, sseEmitter);
-
-    sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
-    sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
-    sseEmitter.onError((e) -> sseEmitters.remove(userId));
-
-    return sseEmitter;
+    SseEmitter emitter = notificationService.save(token);
+    return emitter;
   }
 }

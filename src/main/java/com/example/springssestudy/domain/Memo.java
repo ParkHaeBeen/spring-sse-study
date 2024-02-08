@@ -3,9 +3,11 @@ package com.example.springssestudy.domain;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,14 +21,15 @@ import lombok.NoArgsConstructor;
 public class Memo {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "memo_id")
   private Long id;
 
   private String title;
 
   private String content;
 
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "users_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 

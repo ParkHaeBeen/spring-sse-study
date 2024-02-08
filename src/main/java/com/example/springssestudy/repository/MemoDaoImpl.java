@@ -3,6 +3,8 @@ package com.example.springssestudy.repository;
 import com.example.springssestudy.domain.Memo;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
