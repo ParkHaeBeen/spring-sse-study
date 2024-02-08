@@ -17,13 +17,15 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class NotificationService {
 
   private final NoticeRepository noticeRepository;
+  private final MemoRepository memoRepository;
   private final EmitterRepository emitterRepository;
   private final JwtUtils jwtUtils;
 
-  public void notifyAddCommentEvent(Comment comment) {
-    Long userId = comment.getUser().getId();
+  public void notifyAddCommentEvent(Comment comment, Long memoId) {
+    Memo memo = memoRepository.findById(memoId).get();
+    Long userId = memo.getUser().getId();
     noticeRepository.save(Notice.builder()
-                                .user(comment.getUser())
+                                .user(memo.getUser())
                                 .build());
     SseEmitter sseEmitter = emitterRepository.findByUserId(userId);
     if(sseEmitter == null){

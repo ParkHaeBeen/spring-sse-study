@@ -44,7 +44,6 @@ public class MemoController {
 
   @GetMapping("/memo")
   public Memo getMemo(@RequestParam Long id) {
-    log.info("getMemo id = {}", id);
     return memoService.findMemo(id);
   }
 
@@ -54,7 +53,7 @@ public class MemoController {
       @PathVariable Long id,
       @RequestBody CommentDto commentDto) {
     Comment comment = memoService.addComment(id, userDetails.getUser(), commentDto);
-    notificationService.notifyAddCommentEvent(comment);
+    notificationService.notifyAddCommentEvent(comment,id);
     return ResponseEntity.ok("ok");
   }
 }
