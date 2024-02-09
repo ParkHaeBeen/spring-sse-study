@@ -16,5 +16,6 @@
   - send, save 메서드 생성
 
 ### ✔️ advance2 브랜치
-- Redis pub/sub 이용할 예정 + cache이용
+- Redis pub/sub 이용
+  - event활용하여 실시간 알림서비스 구현 
 
