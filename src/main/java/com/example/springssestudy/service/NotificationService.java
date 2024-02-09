@@ -27,7 +27,7 @@ public class NotificationService {
   private final RedisMessageService redisMessageService;
 
   @Transactional
-  public void notifyAddCommentEvent(Comment comment, Long memoId) {
+  public void notifyAddCommentEvent(Comment comment, Long memoId,Long loginId) {
     Memo memo = memoRepository.findById(memoId).get();
     Long userId = memo.getUser().getId();
     Notice save = noticeRepository.save(Notice.builder()
@@ -35,12 +35,14 @@ public class NotificationService {
         .infoId(memoId)
         .build());
     System.out.println("알림아 가야해!!!!!");
-    eventPublisher.publishEvent(MessageDto.builder()
-            .noticeType(save.getNoticeType())
-            .content(comment.getContent())
-            .id(save.getId())
-            .userId(userId)
-        .build());
+    if(loginId!=userId) {
+      eventPublisher.publishEvent(MessageDto.builder()
+          .noticeType(save.getNoticeType())
+          .content(comment.getContent())
+          .id(save.getId())
+          .userId(userId)
+          .build());
+    }
   }
 
   public SseEmitter save(String token){

@@ -38,10 +38,8 @@ public class MemoService {
   @Transactional
   public Memo findMemo(Long id) {
     List <Notice> notices = noticeRepository.findByInfoId(id);
-    System.out.println("notices = " + notices.size());
     if(!notices.isEmpty()){
       for (Notice notice : notices) {
-        System.out.println(notice);
         notice.changeIsRead();
       }
     }

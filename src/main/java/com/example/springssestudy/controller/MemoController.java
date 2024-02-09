@@ -2,6 +2,7 @@ package com.example.springssestudy.controller;
 
 import com.example.springssestudy.domain.Comment;
 import com.example.springssestudy.domain.Memo;
+import com.example.springssestudy.domain.User;
 import com.example.springssestudy.dto.CommentDto;
 import com.example.springssestudy.dto.MemoDto;
 import com.example.springssestudy.security.UserDetailsImpl;
@@ -52,8 +53,9 @@ public class MemoController {
       @AuthenticationPrincipal UserDetailsImpl userDetails,
       @PathVariable Long id,
       @RequestBody CommentDto commentDto) {
-    Comment comment = memoService.addComment(id, userDetails.getUser(), commentDto);
-    notificationService.notifyAddCommentEvent(comment,id);
+    User user = userDetails.getUser();
+    Comment comment = memoService.addComment(id,user, commentDto);
+    notificationService.notifyAddCommentEvent(comment,id,user.getId());
     return ResponseEntity.ok("ok");
   }
 }
